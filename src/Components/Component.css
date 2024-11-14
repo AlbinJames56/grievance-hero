@@ -1,0 +1,101 @@
+/* navbar */
+.navLinks {
+  text-decoration: none;
+  font-size: x-large;
+  font-weight: "bolder";
+  font-size: "1.75rem";
+  text-shadow: 2px 2px 3px black;
+}
+
+/* banner */
+.banner {
+  background: linear-gradient(
+      180deg,
+      rgba(63, 3, 25, 0) 76%,
+      rgba(148, 0, 0, 0.608) 95%,
+      rgba(38, 5, 5, 0.902) 100%
+    ),
+    url("../assets/Minnal-Murali.jpeg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 700px;
+  width: 100%;
+  color: #ffdd00;
+  text-shadow: 2px 3px 4px rgb(0, 0, 0);
+  font-family: "Rubik Bubbles", serif;
+  font-weight: 400;
+}
+.responsive-button {
+  font-size: 1.3rem;
+  padding: 0.5rem 1rem;
+  background-color: #ffdd00;
+  color: rgb(137, 5, 5);
+}
+
+@media (max-width: 768px) {
+  .banner {
+    height: 400px;
+  }
+  .responsive-button {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .banner {
+    height: 300px;
+  }
+  .banner h1 {
+    font-size: 1.8rem;
+    padding-top: 10px;
+  }
+  .responsive-button {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* navLinks */
+  .navLinks {
+    font-size: small;
+  }
+  /* banner */
+  .banner {
+    height: 250px;
+  }
+  .banner h1 {
+    padding-top: 0px;
+    font-size: 1.5rem;
+  }
+}
+
+/* storySection */
+.story .scroll-container {
+  max-height: 500px;
+  overflow-y: hidden;
+  padding-right: 10px;
+}
+
+.story .scroll-container:hover {
+  overflow-y: auto;
+  /* Ensures scrollbar only shows on hover */
+}
+
+/* Optional: Customize scrollbar for better aesthetics */
+.story .scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.story .scroll-container::-webkit-scrollbar-thumb {
+  background-color: #6c757d; /* Change to your preferred color */
+  border-radius: 4px;
+}
+.chat-box {
+  transition: transform 0.2s ease-in-out;
+}
+
+.chat-box:hover {
+  transform: scale(1.03);
+}
