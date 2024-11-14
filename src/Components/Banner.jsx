@@ -5,7 +5,7 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 function Banner() {
   return (
     <div className="banner">
-      <Container className="pt-5">
+      <Container className=" pt-md-5">
         <Row className="pt-5 mt-md-5">
           <Col md={1}></Col>
           <Col md={6}>

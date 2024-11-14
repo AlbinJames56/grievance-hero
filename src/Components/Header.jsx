@@ -7,9 +7,9 @@ function Header() {
     <div>
       <Container className='fixed-top mt-2'>
         <div className='d-flex justify-content-center gap-4'>
-          <Link className='text-warning fw-bolder  text-center navLinks' >Home</Link>
-          <Link className='text-warning fw-bolder  text-center navLinks' >Grievance</Link>
-          <Link className='text-warning fw-bolder  text-center navLinks'  >About</Link> 
+          <Link to={'/'} className='text-warning fw-bolder  text-center navLinks' >Home</Link>
+          <Link to={'/grievance'} className='text-warning fw-bolder  text-center navLinks' >Grievance</Link>
+          <Link to={'/about'} className='text-warning fw-bolder  text-center navLinks'  >About</Link> 
         </div>
       </Container>
     </div>
