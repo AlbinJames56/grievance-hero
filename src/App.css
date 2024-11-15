@@ -1,5 +1,12 @@
-@import 'bootstrap/dist/css/bootstrap.min.css';
- body{
-    background: rgb(121,2,2);
-background: linear-gradient(106deg, rgba(121,2,2,1) 4%, rgba(2,4,50,1) 100%);
- }
+@import "bootstrap/dist/css/bootstrap.min.css";
+body {
+  background: rgb(121, 2, 2);
+  background: linear-gradient(
+    106deg,
+    rgba(121, 2, 2, 1) 4%,
+    rgba(2, 4, 50, 1) 100%
+  );
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}

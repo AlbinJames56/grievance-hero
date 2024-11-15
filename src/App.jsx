@@ -7,6 +7,7 @@ import Footer from './Components/Footer';
 import About from './Pages/About';
 import GrievanceSubmissionPage from './Pages/GrievanceSubmissionPage';
 import Header from './Components/Header';
+import Auth from './Pages/Auth';
 
 function App() {
   
@@ -15,6 +16,8 @@ function App() {
      <Header/>
       <Routes>
       <Route path="/" element={<Home/>} />
+      <Route path='/login' element={<Auth/>}/>
+      <Route path='/register' element={<Auth register/>}/>
       <Route path="/about" element={<About/>} />
       <Route path="/grievance" element={<GrievanceSubmissionPage/>} />
       </Routes>

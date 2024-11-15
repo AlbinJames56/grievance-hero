@@ -1,6 +1,7 @@
 import React from 'react';
 import './Component.css';
 import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 function Banner() {
   return (
@@ -15,7 +16,7 @@ function Banner() {
               <span> Here to Listen, Ready to Act</span>
             </h1>
 
-            <Button variant='warning' className='mt-2 responsive-button'>Have a grievance? Speak up</Button>
+            <Button variant='warning' className='mt-2 responsive-button' > <Link style={{textDecoration:"none"}} to="/login">Have a grievance? Speak up</Link></Button>
 
           </Col>
         </Row>

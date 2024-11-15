@@ -1,0 +1,18 @@
+ .grievance-bg{
+    background-image: url('../assets//griev-bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 0;  
+    padding: 0; 
+    width: 100vw;
+    overflow-x: hidden;
+    min-height: 700px;
+ }
+ .grievance-card{
+    background: rgb(0, 0, 0);
+    background: linear-gradient(144deg, rgb(2, 2, 8) 0%, rgb(63, 1, 1) 35%, rgba(7,5,38,1) 82%);
+    opacity: 0.9;
+ }
+ .form-label {
+    color: #ffdd00;
+} 
