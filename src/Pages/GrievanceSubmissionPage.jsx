@@ -20,6 +20,7 @@ const GrievanceSubmissionPage = () => {
     email: "",
     issue: "",
     description: "",
+    date: "",
   });
   const [grievances, setGrievances] = useState([]);
   const [status, setStatus] = useState("");
@@ -37,8 +38,7 @@ const GrievanceSubmissionPage = () => {
 
       if (token) {
         const userGrievances = await getUserGrievancesAPI();
-        console.log(userGrievances);
-
+        
         setGrievances(userGrievances.data);
       } else {
         toast.warn("Unauthorized user");
@@ -47,7 +47,7 @@ const GrievanceSubmissionPage = () => {
       console.error(err);
       setGrievances([]);
     }
-    console.log(grievances);
+    
   };
   const toggleTrackGrievance = () => {
     setSubmit(!submit);
@@ -61,16 +61,17 @@ const GrievanceSubmissionPage = () => {
     e.preventDefault();
     // ensure the user is logged in
     const token = sessionStorage.getItem("token");
-    // console.log("token", token);
+    // set date
+    const currentDate = new Date().toISOString();
+    const grievanceData = {
+      ...grievanceDetails,
+      date: currentDate,  
+    };
+     
     // Send grievanceDetails to the backend
     if (token) {
       try {
-        const reqHeader = {
-          "authorization": `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        };
-        // a
-        const result = await addGrievanceAPI(grievanceDetails);
+        const result = await addGrievanceAPI(grievanceData);
         if (result.status == 200) {
           // Reset form
           setGrievanceDetails({
@@ -78,8 +79,9 @@ const GrievanceSubmissionPage = () => {
             email: "",
             issue: "",
             description: "",
+            date:""
           });
-          console.log(result);
+           
           getGrievances();
           toast.success("Grievance submitted successfully!");
         } else {
@@ -190,7 +192,7 @@ const GrievanceSubmissionPage = () => {
               <h2 className="text-light">Your Grievances</h2>
               {grievances?.length > 0 ? (
                 <>
-                  <Table className="customize_table"   bordered  >
+                  <Table className="customize_table" bordered>
                     <thead>
                       <tr>
                         <th>#</th>
@@ -231,7 +233,12 @@ const GrievanceSubmissionPage = () => {
           )}
         </Col>
       </Row>
-      <Modal className="modal-bg" show={showModal} onHide={handleCloseModal} centered>
+      <Modal
+        className="modal-bg"
+        show={showModal}
+        onHide={handleCloseModal}
+        centered
+      >
         <Modal.Header className="modal-body" closeButton>
           <Modal.Title>Grievance Details</Modal.Title>
         </Modal.Header>
@@ -249,13 +256,12 @@ const GrievanceSubmissionPage = () => {
               </p>
               <p>
                 <strong>Action:</strong>
-                {selectedGrievance.statusDescription}
+                {selectedGrievance.action}
               </p>
               <p>
-                <strong>Submission Date:</strong>
-                {new Date(selectedGrievance.createdAt).toLocaleString()}
+                <strong>Updated Date:</strong>
+                { selectedGrievance.updatedDate}
               </p>
-             
             </div>
           )}
         </Modal.Body>
