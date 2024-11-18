@@ -1,7 +1,18 @@
-import React, { useState } from "react";
-import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Button,
+  Card,
+  Table,
+  Modal,
+} from "react-bootstrap";
 import lookForward from "../assets/lookForward.png";
 import "./grievance.css";
+import { addGrievanceAPI, getUserGrievancesAPI } from "../Services/AllApi";
+import { toast } from "react-toastify";
 const GrievanceSubmissionPage = () => {
   // State for tracking form inputs
   const [grievanceDetails, setGrievanceDetails] = useState({
@@ -10,46 +21,100 @@ const GrievanceSubmissionPage = () => {
     issue: "",
     description: "",
   });
-  const [trackingId, setTrackingId] = useState("");
-  const [trackingResult, setTrackingResult] = useState(null);
+  const [grievances, setGrievances] = useState([]);
+  const [status, setStatus] = useState("");
   const [submit, setSubmit] = useState(true);
   // Handle form inputs for submitting a new grievance
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setGrievanceDetails({ ...grievanceDetails, [name]: value });
   };
+  // fetching users grievances
+  const getGrievances = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      console.log("token", token);
 
-  // Handle form submission for new grievance
-  const handleSubmitGrievance = (e) => {
-    e.preventDefault();
-    // Send grievanceDetails to the backend API for submission
-    console.log("Grievance submitted:", grievanceDetails);
-    // Reset form
-    setGrievanceDetails({ name: "", email: "", issue: "", description: "" });
-    alert("Grievance submitted successfully!");
+      if (token) {
+        const userGrievances = await getUserGrievancesAPI();
+        console.log(userGrievances);
+
+        setGrievances(userGrievances.data);
+      } else {
+        toast.warn("Unauthorized user");
+      }
+    } catch (err) {
+      console.error(err);
+      setGrievances([]);
+    }
+    console.log(grievances);
+  };
+  const toggleTrackGrievance = () => {
+    setSubmit(!submit);
   };
 
-  const toggleTrackGrievance=()=>{
-setSubmit(!submit)
-  }
-
-  // Handle tracking ID submission
-  const handleTrackGrievance = (e) => {
+  useEffect(() => {
+    getGrievances();
+  }, []);
+  // Handle form submission of new grievance
+  const handleSubmitGrievance = async (e) => {
     e.preventDefault();
-    // Fetch tracking result from the backend API
-    console.log("Tracking grievance with ID:", trackingId);
-    // Dummy response, replace with actual API call
-    setTrackingResult({
-      status: "In Progress",
-      details: "Your grievance is being reviewed.",
-    });
+    // ensure the user is logged in
+    const token = sessionStorage.getItem("token");
+    // console.log("token", token);
+    // Send grievanceDetails to the backend
+    if (token) {
+      try {
+        const reqHeader = {
+          "authorization": `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        };
+        // a
+        const result = await addGrievanceAPI(grievanceDetails);
+        if (result.status == 200) {
+          // Reset form
+          setGrievanceDetails({
+            name: "",
+            email: "",
+            issue: "",
+            description: "",
+          });
+          console.log(result);
+          getGrievances();
+          toast.success("Grievance submitted successfully!");
+        } else {
+          console.log(result.message);
+          toast.error("Unauthorized email... Please enter registered email");
+        }
+      } catch (err) {
+        console.log(err);
+        toast.error("Sorry Failed to Submit Grievance...");
+      }
+    } else {
+      toast.warn("Please login to submit Grievance");
+    }
   };
 
+  // modal to show details of the grievance
+  const [showModal, setShowModal] = useState(false);
+  const [selectedGrievance, setSelectedGrievance] = useState(null);
+
+  const handleViewAction = (grievanceId) => {
+    const grievance = grievances.find((g) => g._id === grievanceId);
+    setSelectedGrievance(grievance);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedGrievance(null);
+  };
+  //
   return (
     <Container fluid className="p-5 grievance-bg">
       <div className="d-flex justify-content-end mt-5 ">
         <Button variant="warning" className="" onClick={toggleTrackGrievance}>
-          {submit?"Track Grievance":" Submit New Grievance"}
+          {submit ? "Track Grievance" : " Submit New Grievance"}
         </Button>
       </div>
       <Row>
@@ -58,7 +123,7 @@ setSubmit(!submit)
           {submit && (
             <Card className="mb-4 mt-4 grievance-card ">
               <Card.Body>
-                <Card.Title className="text-warning" >
+                <Card.Title className="text-warning">
                   Submit New Grievance
                 </Card.Title>
                 <Form onSubmit={handleSubmitGrievance}>
@@ -120,42 +185,86 @@ setSubmit(!submit)
             </Card>
           )}
 
-      {!submit&& 
-        <Card className="mb-4 mt-4 grievance-card ">
-              <Card.Body>
-                <Card.Title className="text-warning" >
-                  Track Grievance
-                </Card.Title>
-              <Form onSubmit={handleTrackGrievance}>
-                <Form.Group controlId="trackingId">
-                  <Form.Label>Tracking ID</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter your tracking ID"
-                    value={trackingId}
-                    onChange={(e) => setTrackingId(e.target.value)}
-                    required
-                  />
-                </Form.Group>
-                <div className=" mt-3  d-flex justify-content-end">
-                <Button variant="warning" type="submit">
-                  Track Grievance
-                </Button></div>
-              </Form>
+          {!submit && (
+            <div className="mb-4 mt-4 grievance-card rounded p-3">
+              <h2 className="text-light">Your Grievances</h2>
+              {grievances?.length > 0 ? (
+                <>
+                  <Table className="customize_table"   bordered  >
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Issue</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {grievances?.map((grievance, index) => (
+                        <tr key={grievance._id}>
+                          <td>{index + 1}</td>
+                          <td>{grievance?.issue}</td>
 
-              {trackingResult && (
-                <Card className="mt-4">
-                  <Card.Body>
-                    <Card.Title>Tracking Result</Card.Title>
-                    <p><strong>Status:</strong> {trackingResult.status}</p>
-                    <p><strong>Details:</strong> {trackingResult.details}</p>
-                  </Card.Body>
-                </Card>
+                          <td>{grievance?.status}</td>
+                          <td>{grievance?.statusDescription}</td>
+                          <td>
+                            <Button
+                              variant="warning"
+                              onClick={() => handleViewAction(grievance._id)}
+                            >
+                              View
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                  {status && (
+                    <div className="alert alert-info mt-3">{status}</div>
+                  )}
+                </>
+              ) : (
+                <p className="text-light">No grievances found.</p>
               )}
-            </Card.Body>
-          </Card>}
+            </div>
+          )}
         </Col>
       </Row>
+      <Modal className="modal-bg" show={showModal} onHide={handleCloseModal} centered>
+        <Modal.Header className="modal-body" closeButton>
+          <Modal.Title>Grievance Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="modal-body">
+          {selectedGrievance && (
+            <div>
+              <p>
+                <strong>Issue:</strong> {selectedGrievance.issue}
+              </p>
+              <p>
+                <strong>Description:</strong> {selectedGrievance.description}
+              </p>
+              <p>
+                <strong>Status:</strong> {selectedGrievance.status}
+              </p>
+              <p>
+                <strong>Action:</strong>
+                {selectedGrievance.statusDescription}
+              </p>
+              <p>
+                <strong>Submission Date:</strong>
+                {new Date(selectedGrievance.createdAt).toLocaleString()}
+              </p>
+             
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer className="modal-body">
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

@@ -1,18 +1,54 @@
- .grievance-bg{
-    background-image: url('../assets//griev-bg.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    margin: 0;  
-    padding: 0; 
-    width: 100vw;
-    overflow-x: hidden;
-    min-height: 700px;
- }
- .grievance-card{
-    background: rgb(0, 0, 0);
-    background: linear-gradient(144deg, rgb(2, 2, 8) 0%, rgb(63, 1, 1) 35%, rgba(7,5,38,1) 82%);
-    opacity: 0.9;
- }
- .form-label {
-    color: #ffdd00;
-} 
+.grievance-bg {
+  background-image: url("../assets//griev-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  overflow-x: hidden;
+  min-height: 700px;
+}
+.grievance-card {
+  background: rgb(0, 0, 0);
+  background: linear-gradient(
+    144deg,
+    rgb(2, 2, 8) 0%,
+    rgb(63, 1, 1) 35%,
+    rgba(7, 5, 38, 1) 82%
+  );
+  opacity: 0.9;
+}
+.form-label {
+  color: #ffdd00;
+}
+
+.customize_table {
+   border-radius: 20px;
+  background-color:transparent !important;  
+  color: white;  
+  border: 1px solid #ffc107 !important;  
+}
+
+.customize_table th,
+.customize_table td {
+  border-color: #ffc107 !important; 
+  background-color:transparent !important; 
+  color: aliceblue;
+}
+ 
+
+.customize_table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.098);  
+}
+ 
+.modal-body{
+  background: rgb(0, 0, 0);
+   background: linear-gradient(
+     144deg,
+     rgb(2, 2, 8) 0%,
+     rgb(63, 1, 1) 35%,
+     rgba(7, 5, 38, 1) 82%
+   );
+   opacity: 1;
+   color: #ffffff;
+}

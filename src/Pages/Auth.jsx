@@ -39,11 +39,11 @@ function Auth({ register }) {
           sessionStorage.setItem("username", result.data.existingUser.username);
 
           sessionStorage.setItem("token", result.data.token);
-          navigate("/");
+          navigate("/grievance");
           //   setIsAuthorized(true);
           setUserData({ email: "", password: "" });
         } else {
-          toast.warning(result.response.data);
+          toast.warning("Invalid Email or password");
         }
       } catch (err) {
         console.log(err);
@@ -60,16 +60,16 @@ function Auth({ register }) {
       // api calling
       try {
         const result = await registerAPI(userData);
-        console.log(result);
-        if (result.status === 200) {
+        if (result?.status === 200) {
           toast.success(`${result.data.username} has successfully registered`);
           navigate("/login");
           setUserData({ username: "", email: "", password: "" });
         } else {
-          toast.warning(result.response.data);
+          toast.warning(result?.response?.data || "An error occurred");
         }
       } catch (err) {
         console.log(err);
+        toast.error("Something went wrong. Please try again.");
       }
     }
   };
