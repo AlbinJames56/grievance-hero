@@ -9,10 +9,12 @@ import {
   Table,
   Modal,
 } from "react-bootstrap";
+import { io } from "socket.io-client";
 import lookForward from "../assets/lookForward.png";
 import "./grievance.css";
 import { addGrievanceAPI, getUserGrievancesAPI } from "../Services/AllApi";
 import { toast } from "react-toastify";
+import { SERVER_URL } from "../Services/ServerUrl";
 const GrievanceSubmissionPage = () => {
   // State for tracking form inputs
   const [grievanceDetails, setGrievanceDetails] = useState({
@@ -50,6 +52,19 @@ const GrievanceSubmissionPage = () => {
   const toggleTrackGrievance = () => {
     setSubmit(!submit);
   };
+
+  // to realtime update when superhero updates
+  useEffect(() => {
+    const socket = io(SERVER_URL); 
+    socket.on("new-grievance", (newGrievance) => {
+      console.log("New grievance received:", newGrievance);
+      setGrievances((prevGrievances) => [newGrievance, ...prevGrievances]);
+    });
+
+    return () => {
+      socket.off("new-grievance");  
+    };
+  }, []);
 
   useEffect(() => {
     getGrievances();
