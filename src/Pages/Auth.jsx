@@ -3,10 +3,10 @@ import { Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { loginAPI, registerAPI } from "../Services/AllApi";
 import { Flip, ToastContainer, toast } from "react-toastify";
-// import { TokenAuthContext } from "../ContextAPI/TokenAuth";
+import { TokenAuthContext } from "../ContextAPI/TokenAuth";
 import boyImg from "../assets/boy.png";
 function Auth({ register }) {
-  //   const { isAuthorized, setIsAuthorized } = useContext(TokenAuthContext);
+    const { isAuthorized, setIsAuthorized } = useContext(TokenAuthContext);
   const isRegisterForm = register ? true : false;
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
@@ -14,7 +14,7 @@ function Auth({ register }) {
     email: "",
     password: "",
   });
-  console.log(userData);
+  
   // login
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -34,13 +34,14 @@ function Auth({ register }) {
     } else {
       try {
         const result = await loginAPI({ email, password });
-        console.log(result);
+        
         if (result.status === 200) {
           sessionStorage.setItem("username", result.data.existingUser.username);
 
           sessionStorage.setItem("token", result.data.token);
-          navigate("/grievance");
-          //   setIsAuthorized(true);
+            setIsAuthorized(true);
+            navigate("/grievance");
+          
           setUserData({ email: "", password: "" });
         } else {
           toast.warning("Invalid Email or password");
@@ -74,12 +75,12 @@ function Auth({ register }) {
     }
   };
   return (
-    <div className="  p-5 ">
+    <div className="  p-md-5 pt-5 mb-md-0 mb-5 mt-md-1 mt-5  ">
       <div
         className="d-flex justify-content-center align-items-center p-5"
         style={{ height: "70vh" }}
       >
-        <div className="container w-75">
+        <div className="container pt-5 pt-md-0 container col-md-6  col-sm-12">
           <Link
             to={"/"}
             style={{

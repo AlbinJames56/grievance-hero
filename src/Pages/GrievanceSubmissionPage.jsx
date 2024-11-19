@@ -34,11 +34,10 @@ const GrievanceSubmissionPage = () => {
   const getGrievances = async () => {
     try {
       const token = sessionStorage.getItem("token");
-      console.log("token", token);
 
       if (token) {
         const userGrievances = await getUserGrievancesAPI();
-        
+
         setGrievances(userGrievances.data);
       } else {
         toast.warn("Unauthorized user");
@@ -47,7 +46,6 @@ const GrievanceSubmissionPage = () => {
       console.error(err);
       setGrievances([]);
     }
-    
   };
   const toggleTrackGrievance = () => {
     setSubmit(!submit);
@@ -65,9 +63,9 @@ const GrievanceSubmissionPage = () => {
     const currentDate = new Date().toISOString();
     const grievanceData = {
       ...grievanceDetails,
-      date: currentDate,  
+      date: currentDate,
     };
-     
+
     // Send grievanceDetails to the backend
     if (token) {
       try {
@@ -79,9 +77,9 @@ const GrievanceSubmissionPage = () => {
             email: "",
             issue: "",
             description: "",
-            date:""
+            date: "",
           });
-           
+
           getGrievances();
           toast.success("Grievance submitted successfully!");
         } else {
@@ -113,15 +111,15 @@ const GrievanceSubmissionPage = () => {
   };
   //
   return (
-    <Container fluid className="p-5 grievance-bg">
-      <div className="d-flex justify-content-end mt-5 ">
+    <Container fluid className="p-sm-5 pt-5 p-1 grievance-bg">
+      <div className="d-flex justify-content-end mt-5 pt-5">
         <Button variant="warning" className="" onClick={toggleTrackGrievance}>
           {submit ? "Track Grievance" : " Submit New Grievance"}
         </Button>
       </div>
       <Row>
-        <Col sm={5}></Col>
-        <Col sm={6}>
+        <Col md={5}></Col>
+        <Col md={6} sm={12}>
           {submit && (
             <Card className="mb-4 mt-4 grievance-card ">
               <Card.Body>
@@ -209,7 +207,7 @@ const GrievanceSubmissionPage = () => {
                           <td>{grievance?.issue}</td>
 
                           <td>{grievance?.status}</td>
-                          <td>{grievance?.statusDescription}</td>
+                          <td>{grievance?.action}</td>
                           <td>
                             <Button
                               variant="warning"
@@ -240,33 +238,36 @@ const GrievanceSubmissionPage = () => {
         centered
       >
         <Modal.Header className="modal-body" closeButton>
-          <Modal.Title>Grievance Details</Modal.Title>
+          <Modal.Title className="text-warning">Grievance Details</Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-body">
           {selectedGrievance && (
             <div>
               <p>
-                <strong>Issue:</strong> {selectedGrievance.issue}
+                <strong className="text-warning">Issue: </strong>{" "}
+                {selectedGrievance.issue}
               </p>
               <p>
-                <strong>Description:</strong> {selectedGrievance.description}
+                <strong className="text-warning">Description: </strong>{" "}
+                {selectedGrievance.description}
               </p>
               <p>
-                <strong>Status:</strong> {selectedGrievance.status}
+                <strong className="text-warning">Status : </strong>{" "}
+                {selectedGrievance.status}
               </p>
               <p>
-                <strong>Action:</strong>
+                <strong className="text-warning">Action : </strong>
                 {selectedGrievance.action}
               </p>
               <p>
-                <strong>Updated Date:</strong>
-                { selectedGrievance.updatedDate}
+                <strong className="text-warning">Updated Date: </strong>
+                {selectedGrievance.updatedDate}
               </p>
             </div>
           )}
         </Modal.Body>
         <Modal.Footer className="modal-body">
-          <Button variant="secondary" onClick={handleCloseModal}>
+          <Button variant="warning" onClick={handleCloseModal}>
             Close
           </Button>
         </Modal.Footer>

@@ -16,7 +16,7 @@ function Banner() {
               <span> Here to Listen, Ready to Act</span>
             </h1>
 
-            <Button variant='warning' className='mt-2 responsive-button' > <Link style={{textDecoration:"none"}} to="/login">Have a grievance? Speak up</Link></Button>
+            <Button variant='warning' className='mt-2 responsive-button'> <Link style={{textDecoration:"none",color:"white"}} to="/login">Have a grievance? Speak up</Link></Button>
 
           </Col>
         </Row>
