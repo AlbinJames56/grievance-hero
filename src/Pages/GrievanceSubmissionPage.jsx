@@ -32,8 +32,8 @@ const GrievanceSubmissionPage = () => {
   const [submit, setSubmit] = useState(true);
   //set card or table view
   const [isCardView, setIsCardView] = useState(false);
-   // Handle form inputs for submitting a new grievanceconst
-    handleInputChange = (e) => {
+   // Handle form inputs for submitting new
+   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setGrievanceDetails({ ...grievanceDetails, [name]: value });
   };
