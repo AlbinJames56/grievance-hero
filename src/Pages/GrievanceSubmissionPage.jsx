@@ -15,6 +15,8 @@ import "./grievance.css";
 import { addGrievanceAPI, getUserGrievancesAPI } from "../Services/AllApi";
 import { toast } from "react-toastify";
 import { SERVER_URL } from "../Services/ServerUrl";
+
+
 const GrievanceSubmissionPage = () => {
   // State for tracking form inputs
   const [grievanceDetails, setGrievanceDetails] = useState({
@@ -28,10 +30,10 @@ const GrievanceSubmissionPage = () => {
   const [grievances, setGrievances] = useState([]);
   const [status, setStatus] = useState("");
   const [submit, setSubmit] = useState(true);
-  // Handle form inputs for submitting a new grievance
   //set card or table view
   const [isCardView, setIsCardView] = useState(false);
-  const handleInputChange = (e) => {
+   // Handle form inputs for submitting a new grievanceconst
+    handleInputChange = (e) => {
     const { name, value } = e.target;
     setGrievanceDetails({ ...grievanceDetails, [name]: value });
   };
@@ -39,10 +41,8 @@ const GrievanceSubmissionPage = () => {
   const getGrievances = async () => {
     try {
       const token = sessionStorage.getItem("token");
-
       if (token) {
         const userGrievances = await getUserGrievancesAPI();
-
         setGrievances(userGrievances.data);
       } else {
         toast.warn("Unauthorized user");
@@ -63,7 +63,6 @@ const GrievanceSubmissionPage = () => {
       console.log("New grievance received:", newGrievance);
       setGrievances((prevGrievances) => [newGrievance, ...prevGrievances]);
     });
-
     return () => {
       socket.off("new-grievance");
     };
@@ -72,6 +71,7 @@ const GrievanceSubmissionPage = () => {
   useEffect(() => {
     getGrievances();
   }, []);
+
   // Handle form submission of new grievance
   const handleSubmitGrievance = async (e) => {
     e.preventDefault();
@@ -120,7 +120,6 @@ const GrievanceSubmissionPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedGrievance, setSelectedGrievance] = useState(null);
 
-
   const handleViewAction = (grievanceId) => {
     const grievance = grievances.find((g) => g._id === grievanceId);
     setSelectedGrievance(grievance);
@@ -131,8 +130,20 @@ const GrievanceSubmissionPage = () => {
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedGrievance(null);
+  }; 
+  // formatting date
+  const formatDate = (date) => {
+    const dateObject = new Date(date);
+    return dateObject.toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
   };
-  //
+
   return (
     <Container fluid className="p-sm-5 pt-lg-5 p-1 grievance-bg">
       <Row>
@@ -278,6 +289,7 @@ const GrievanceSubmissionPage = () => {
                   )}
                 </Button>
               </div>
+              {/* checking card or table view */}
               {isCardView ? (
                 <Row>
                   {grievances?.map((grievance, index) => (
@@ -363,6 +375,7 @@ const GrievanceSubmissionPage = () => {
           )}
         </Col>
       </Row>
+      {/* modal to show details */}
       <Modal
         className="modal-bg"
         show={showModal}
@@ -393,7 +406,7 @@ const GrievanceSubmissionPage = () => {
               </p>
               <p>
                 <strong className="text-warning">Updated Date: </strong>
-                {selectedGrievance.updatedDate}
+                {formatDate(selectedGrievance.updatedDate)} 
               </p>
             </div>
           )}

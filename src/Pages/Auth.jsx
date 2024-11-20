@@ -37,7 +37,6 @@ function Auth({ register }) {
         
         if (result.status === 200) {
           sessionStorage.setItem("username", result.data.existingUser.username);
-
           sessionStorage.setItem("token", result.data.token);
             setIsAuthorized(true);
             navigate("/grievance");
