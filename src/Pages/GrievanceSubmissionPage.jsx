@@ -120,9 +120,11 @@ const GrievanceSubmissionPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedGrievance, setSelectedGrievance] = useState(null);
 
+
   const handleViewAction = (grievanceId) => {
     const grievance = grievances.find((g) => g._id === grievanceId);
     setSelectedGrievance(grievance);
+    console.log(selectedGrievance);
     setShowModal(true);
   };
 

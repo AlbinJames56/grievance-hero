@@ -44,7 +44,7 @@ function Auth({ register }) {
           
           setUserData({ email: "", password: "" });
         } else {
-          toast.warning("Invalid Email or password");
+          toast.warning(result.message);
         }
       } catch (err) {
         console.log(err);
