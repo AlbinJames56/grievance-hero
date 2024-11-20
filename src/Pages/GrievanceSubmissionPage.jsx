@@ -146,7 +146,7 @@ const GrievanceSubmissionPage = () => {
             </Button>
           </div>
           {submit && (
-            <Card className="m-4 pe-5 grievance-card ">
+            <Card className="m-4  p-3 grievance-card ">
               <Card.Body>
                 <Card.Title className="text-warning">
                   Submit New Grievance
@@ -165,10 +165,10 @@ const GrievanceSubmissionPage = () => {
                   </Form.Group>
 
                   <Form.Group controlId="email" className="mt-3">
-                    <Form.Label>Email</Form.Label>
+                    <Form.Label>Email (Registered Email required)</Form.Label>
                     <Form.Control
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder="Enter your registered email"
                       name="email"
                       value={grievanceDetails.email}
                       onChange={handleInputChange}
@@ -184,8 +184,11 @@ const GrievanceSubmissionPage = () => {
                       name="issue"
                       value={grievanceDetails.issue}
                       onChange={handleInputChange}
+                      maxLength={60} 
                       required
-                    />
+                    /><Form.Text className="text-secondary">
+                    Maximum 100 characters allowed.
+                  </Form.Text>
                   </Form.Group>
 
                   <Form.Group controlId="description" className="mt-3">
@@ -200,34 +203,53 @@ const GrievanceSubmissionPage = () => {
                       required
                     />
                   </Form.Group>
-                  <Form.Group controlId="formFile" className="mb-3">
-                    <FileBase
-                      type="file"
-                      multiple={false}
-                      onDone={({ base64, type }) => {
-                        if (
-                          ["image/jpeg", "image/jpg", "image/png"].includes(
-                            type
-                          )
-                        ) {
-                          setGrievanceDetails({
-                            ...grievanceDetails,
-                            file: base64,
-                          });
-                        } else {
-                          alert("Please upload a JPG, JPEG, or PNG file.");
-                        }
+                  <Form.Group controlId="formFile" className="my-3">
+                    <Form.Label>Attach File (Optional)</Form.Label>
+                    <div
+                      className="form-control"
+                      style={{
+                        padding: "0.375rem 0.75rem",
+                        border: "1px solid #ced4da",
+                        borderRadius: "0.375rem",
+                        display: "flex",
+                        alignItems: "center",
                       }}
-                    />
+                    >
+                      <FileBase
+                        type="file"
+                        multiple={false}
+                        onDone={({ base64, type }) => {
+                          if (
+                            ["image/jpeg", "image/jpg", "image/png"].includes(
+                              type
+                            )
+                          ) {
+                            setGrievanceDetails({
+                              ...grievanceDetails,
+                              file: base64,
+                            });
+                          } else {
+                            alert("Please upload a JPG, JPEG, or PNG file.");
+                          }
+                        }}
+                      />
+                    </div>
                     {grievanceDetails.file && (
                       <img
                         src={grievanceDetails.file}
                         alt="preview"
                         className="mt-3"
-                        style={{ height: "100px", width: "auto" }}
+                        style={{
+                          height: "100px",
+                          width: "auto",
+                          border: "1px solid #ced4da",
+                          borderRadius: "0.375rem",
+                          padding: "5px",
+                        }}
                       />
                     )}
                   </Form.Group>
+
                   <div className=" mt-3  d-flex justify-content-end">
                     <Button type="submit" variant="warning">
                       Submit Grievance
