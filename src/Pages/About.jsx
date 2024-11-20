@@ -3,6 +3,7 @@ import { Card, Container, Row, Col } from "react-bootstrap";
 import "./About.css";
 import minnalImg from "../assets/ma-icon.png";
 import Footer from "../Components/Footer";
+import SimpleChatbot from "../Components/SimpleChatBot";
 const About = () => {
   const aboutData = [
     {
@@ -65,6 +66,7 @@ const About = () => {
           </Col>
         ))}
       </Row>
+      <SimpleChatbot/>
       <Footer/>
     </Container>
   );

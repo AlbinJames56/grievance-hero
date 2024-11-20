@@ -8,11 +8,11 @@ import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import TokenAuth from "./ContextAPI/TokenAuth.jsx";
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+ 
     <TokenAuth>
       <BrowserRouter>
         <App />
       </BrowserRouter> 
     </TokenAuth>
-  </StrictMode>
+ 
 );
