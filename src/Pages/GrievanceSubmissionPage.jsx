@@ -10,7 +10,7 @@ import {
   Modal,
 } from "react-bootstrap";
 import { io } from "socket.io-client";
-import lookForward from "../assets/lookForward.png";
+import FileBase from "react-file-base64";
 import "./grievance.css";
 import { addGrievanceAPI, getUserGrievancesAPI } from "../Services/AllApi";
 import { toast } from "react-toastify";
@@ -23,11 +23,14 @@ const GrievanceSubmissionPage = () => {
     issue: "",
     description: "",
     date: "",
+    file: "",
   });
   const [grievances, setGrievances] = useState([]);
   const [status, setStatus] = useState("");
   const [submit, setSubmit] = useState(true);
   // Handle form inputs for submitting a new grievance
+  //set card or table view
+  const [isCardView, setIsCardView] = useState(false);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setGrievanceDetails({ ...grievanceDetails, [name]: value });
@@ -55,14 +58,14 @@ const GrievanceSubmissionPage = () => {
 
   // to realtime update when superhero updates
   useEffect(() => {
-    const socket = io(SERVER_URL); 
+    const socket = io(SERVER_URL);
     socket.on("new-grievance", (newGrievance) => {
       console.log("New grievance received:", newGrievance);
       setGrievances((prevGrievances) => [newGrievance, ...prevGrievances]);
     });
 
     return () => {
-      socket.off("new-grievance");  
+      socket.off("new-grievance");
     };
   }, []);
 
@@ -85,6 +88,8 @@ const GrievanceSubmissionPage = () => {
     if (token) {
       try {
         const result = await addGrievanceAPI(grievanceData);
+        console.log(result.status);
+
         if (result.status == 200) {
           // Reset form
           setGrievanceDetails({
@@ -93,6 +98,7 @@ const GrievanceSubmissionPage = () => {
             issue: "",
             description: "",
             date: "",
+            file: "",
           });
 
           getGrievances();
@@ -126,17 +132,21 @@ const GrievanceSubmissionPage = () => {
   };
   //
   return (
-    <Container fluid className="p-sm-5 pt-5 p-1 grievance-bg">
-      <div className="d-flex justify-content-end mt-5 pt-5">
-        <Button variant="warning" className="" onClick={toggleTrackGrievance}>
-          {submit ? "Track Grievance" : " Submit New Grievance"}
-        </Button>
-      </div>
+    <Container fluid className="p-sm-5 pt-lg-5 p-1 grievance-bg">
       <Row>
-        <Col md={5}></Col>
-        <Col md={6} sm={12}>
+        <Col lg={5}></Col>
+        <Col lg={6} md={12} className="p-4">
+          <div className="d-flex justify-content-end mt-5 me-3 pt-md-5">
+            <Button
+              variant="warning"
+              className=""
+              onClick={toggleTrackGrievance}
+            >
+              {submit ? "Track Grievance" : " Submit New Grievance"}
+            </Button>
+          </div>
           {submit && (
-            <Card className="mb-4 mt-4 grievance-card ">
+            <Card className="m-4 pe-5 grievance-card ">
               <Card.Body>
                 <Card.Title className="text-warning">
                   Submit New Grievance
@@ -190,6 +200,34 @@ const GrievanceSubmissionPage = () => {
                       required
                     />
                   </Form.Group>
+                  <Form.Group controlId="formFile" className="mb-3">
+                    <FileBase
+                      type="file"
+                      multiple={false}
+                      onDone={({ base64, type }) => {
+                        if (
+                          ["image/jpeg", "image/jpg", "image/png"].includes(
+                            type
+                          )
+                        ) {
+                          setGrievanceDetails({
+                            ...grievanceDetails,
+                            file: base64,
+                          });
+                        } else {
+                          alert("Please upload a JPG, JPEG, or PNG file.");
+                        }
+                      }}
+                    />
+                    {grievanceDetails.file && (
+                      <img
+                        src={grievanceDetails.file}
+                        alt="preview"
+                        className="mt-3"
+                        style={{ height: "100px", width: "auto" }}
+                      />
+                    )}
+                  </Form.Group>
                   <div className=" mt-3  d-flex justify-content-end">
                     <Button type="submit" variant="warning">
                       Submit Grievance
@@ -202,13 +240,68 @@ const GrievanceSubmissionPage = () => {
 
           {!submit && (
             <div className="mb-4 mt-4 grievance-card rounded p-3">
-              <h2 className="text-light">Your Grievances</h2>
-              {grievances?.length > 0 ? (
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h2 className="text-light">Your Grievances</h2>
+
+                <Button
+                  variant="warning"
+                  onClick={() => setIsCardView(!isCardView)}
+                >
+                  {isCardView ? (
+                    <i class="fa fa-table"></i>
+                  ) : (
+                    <i class="fa-solid fa-id-card"></i>
+                  )}
+                </Button>
+              </div>
+              {isCardView ? (
+                <Row>
+                  {grievances?.map((grievance, index) => (
+                    <Col key={grievance._id} sm={12} lg={6} className="mb-3">
+                      <Card className="grievanceCard">
+                        <Card.Body>
+                          <Card.Title>{grievance.name}</Card.Title>
+                          <Card.Text>
+                            <strong>Id:</strong> {grievance._id}
+                          </Card.Text>
+                          <Card.Subtitle className="mb-2 text-muted  ">
+                            Issue: {grievance.issue}
+                          </Card.Subtitle>
+
+                          <Card.Text>
+                            <strong>Status:</strong> {grievance.status}
+                          </Card.Text>
+                          <Card.Text>
+                            <strong>Action:</strong> {grievance.action}
+                          </Card.Text>
+                          <Card.Text>
+                            <strong>Created:</strong> {grievance.updatedDate}
+                          </Card.Text>
+
+                          <Button
+                            variant="warning"
+                            onClick={() => handleViewAction(grievance._id)}
+                          >
+                            View
+                          </Button>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  ))}
+                </Row>
+              ) : grievances?.length > 0 ? (
                 <>
-                  <Table className="customize_table" bordered>
+                  <Table
+                    striped
+                    bordered
+                    hover
+                    responsive
+                    className="customize_table"
+                  >
                     <thead>
                       <tr>
                         <th>#</th>
+                        <th>Id</th>
                         <th>Issue</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -219,8 +312,8 @@ const GrievanceSubmissionPage = () => {
                       {grievances?.map((grievance, index) => (
                         <tr key={grievance._id}>
                           <td>{index + 1}</td>
+                          <td>{grievance._id}</td>
                           <td>{grievance?.issue}</td>
-
                           <td>{grievance?.status}</td>
                           <td>{grievance?.action}</td>
                           <td>
