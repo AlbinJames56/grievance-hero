@@ -32,4 +32,9 @@ This is the user interface for the Grievance Portal. Users can submit grievances
    npm install
    npm run dev
 
- 
+## How to Use
+> Navigate to the homepage and log in or register as a user.
+> Fill out the grievance form and attach any necessary files.
+> Submit the grievance.
+> Track the status of your grievances on the platform.
+
