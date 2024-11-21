@@ -32,12 +32,4 @@ This is the user interface for the Grievance Portal. Users can submit grievances
    npm install
    npm run dev
 
-Folder Structure
-superherouser/
-├── public/              # Public assets (index.html, favicon, etc.)
-├── src/
-│   ├── components/      # Reusable components (e.g., Navbar, Footer)
-│   ├── pages/           # Page components (Home, Login, SubmitGrievance)
-│   ├── utils/           # Utility functions
-│   ├── App.js           # Main app component
-│   └── index.js         # Entry point
+ 
